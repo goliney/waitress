@@ -1,4 +1,4 @@
-waitress
+Waitress
 ========
 
 Simple javascript asynchronous queue
