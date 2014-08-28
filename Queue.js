@@ -22,25 +22,49 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
  */
 
-/*
-    Based on Dustin Diaz's code snippet
-    SEE: http://www.dustindiaz.com/async-method-queues
-*/
+/**
+ * Simple asynchronous queue.
+ * Based on [snippet]{@link http://www.dustindiaz.com/async-method-queues}
+ *
+ * @constructor
+ * */
 
-VIO.Queue = function () {
-    // store your callbacks
+Queue = function () {
+    /**
+     * Store callbacks and arguments to apply it with
+     * @type {Array}
+     * @private
+     * */
     this._methods = [];
-    // keep a reference to response you had flushed
+
+    /**
+     * Keep a reference to response you had flushed
+     * @type {{thisArg: null, args: null}}
+     * @private
+     */
     this._params = {
         'thisArg': null,
         'args': null
-    }
-    // all queues start off unflushed
+    };
+
+    /**
+     * Flush marker. All queues start off unflushed
+     * @type {boolean}
+     * @private
+     */
     this._flushed = false;
 };
 
 
-VIO.Queue.prototype = {
+Queue.prototype = {
+
+    /**
+     * Detaches `this` variable from arguments array.
+     *
+     * @param args_array {Array} - Arguments array which begins with `this` variable (args_array[0])
+     * @returns {{thisArg: *, args: Array}}
+     * @private
+     */
     _parseParams: function (args_array) {
         var args = [];
         for (var i = 1; i < args_array.length; i++) {
@@ -52,6 +76,14 @@ VIO.Queue.prototype = {
         }
     },
 
+    /**
+     * Apply callback with arguments
+     *
+     * @param method {Object} - Item of this._methods
+     * @param [params] {Object} - Arguments passed to method. Contains `this` reference and arguments
+     * @param [forced] {boolean} - If True, method will be applied with arguments from `params` ant not `method.params`
+     * @private
+     */
     _apply: function(method, params, forced) {
         if (method.params && !forced) {
             params = this._parseParams(method.params)
@@ -59,16 +91,22 @@ VIO.Queue.prototype = {
         method.callback.apply(params.thisArg, params.args);
     },
 
-    // adds callbacks and arguments to your queue
+    /**
+     * Adds callbacks and arguments to queue. If the queue had been flushed, returns immediately.
+     * Otherwise push it on the queue
+     *
+     * @param fn {Function} - Actual callback
+     * @param [args_array] {Array} - Arguments array, containing `this` reference.
+     *                               If present, `fn` may be applied with `args_array` eventually
+     */
     add: function (fn, args_array) {
-        // if the queue had been flushed, return immediately
         if (this._flushed) {
             var params = this._params;
+            // if .add() was called with params, use them instead of flushed params
             if (args_array && args_array.length > 0) {
                 params = this._parseParams(args_array);
             }
             fn.apply(params.thisArg, params.args);
-            // otherwise push it on the queue
         } else {
             this._methods.push({
                 'callback': fn,
@@ -77,6 +115,10 @@ VIO.Queue.prototype = {
         }
     },
 
+    /**
+     * Applies all callbacks in queue and flushes it. Can be called once, as there is no methods left after
+     * @param {*} - Arguments .flush() method is called with will be passed to methods in queue
+     */
     flush: function () {
         // note: flush only ever happens once
         if (this._flushed) {
@@ -92,6 +134,10 @@ VIO.Queue.prototype = {
         this._flushed = true;
     },
 
+    /**
+     * Similar to .flush() except it can be called more than once and it doesn't flushes methods from queue.
+     * @param {*} - Arguments .run() method is called with will be passed to methods in queue
+     */
     run: function () {
         var parsedParams = this._parseParams(arguments);
         for (var i = 0; i < this._methods.length; i++) {
