@@ -1,4 +1,4 @@
-Waitress
+Waitress [![Build Status](https://travis-ci.org/goliney/waitress.svg?branch=master)](https://travis-ci.org/goliney/waitress)
 ========
 
 Simple javascript asynchronous queue
