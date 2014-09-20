@@ -1,27 +1,3 @@
-/* 
-The MIT License (MIT)
-
-Copyright (c) 2014, Serge Goliney
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
- */
-
 /**
  * Simple asynchronous queue.
  * Based on [snippet]{@link http://www.dustindiaz.com/async-method-queues}
@@ -29,7 +5,7 @@ THE SOFTWARE.
  * @constructor
  * */
 
-Queue = function () {
+Waitress = function () {
     /**
      * Store callbacks and arguments to apply it with
      * @type {Array}
@@ -56,7 +32,7 @@ Queue = function () {
 };
 
 
-Queue.prototype = {
+Waitress.prototype = {
 
     /**
      * Detaches `this` variable from arguments array.
@@ -73,7 +49,7 @@ Queue.prototype = {
         return {
             'thisArg': args_array[0],
             'args': args
-        }
+        };
     },
 
     /**
@@ -81,12 +57,12 @@ Queue.prototype = {
      *
      * @param method {Object} - Item of this._methods
      * @param [params] {Object} - Arguments passed to method. Contains `this` reference and arguments
-     * @param [forced] {boolean} - If True, method will be applied with arguments from `params` ant not `method.params`
+     * @param [forced] {boolean} - If True, method will be applied with arguments from `params` and not `method.params`
      * @private
      */
-    _apply: function(method, params, forced) {
-        if (method.params && !forced) {
-            params = this._parseParams(method.params)
+    _apply: function (method, params, forced) {
+        if (method.params && forced !== true) {
+            params = this._parseParams(method.params);
         }
         method.callback.apply(params.thisArg, params.args);
     },
