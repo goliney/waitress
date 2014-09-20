@@ -6,15 +6,15 @@ module.exports = function (grunt) {
 
         uglify: {
             waitress: {
-                src: 'Waitress.js',
-                dest: 'Waitress.min.js'
+                src: 'src/Waitress.js',
+                dest: 'src/Waitress.min.js'
             }
         },
 
         jsdoc : {
             waitress : {
                 src: [
-                    'Waitress.js'
+                    'src/Waitress.js'
                 ],
                 options: {
                     destination: 'docs/'
@@ -23,7 +23,7 @@ module.exports = function (grunt) {
         },
 
         jshint: {
-            all: ['Waitress.js']
+            all: ['src/Waitress.js']
         }
 
     });
