@@ -11,17 +11,6 @@ module.exports = function (grunt) {
             }
         },
 
-        jsdoc : {
-            waitress : {
-                src: [
-                    'src/Waitress.js'
-                ],
-                options: {
-                    destination: 'docs/'
-                }
-            }
-        },
-
         jshint: {
             all: ['src/Waitress.js']
         }
@@ -31,8 +20,7 @@ module.exports = function (grunt) {
     // 2. Where we tell Grunt we plan to use this plug-in.
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-jsdoc');
 
     // 3. Where we tell Grunt what to do when we type "grunt" into the terminal.
-    grunt.registerTask('build', ['jsdoc', 'uglify']);
+    grunt.registerTask('build', ['uglify']);
 };
